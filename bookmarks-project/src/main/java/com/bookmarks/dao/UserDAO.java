@@ -1,26 +1,24 @@
-package com.bookmarks.util;
+package com.bookmarks.dao;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
-
-import com.bookmarks.dao.UserDAO;
 import com.bookmarks.entities.Bookmarks;
 import com.bookmarks.entities.Collection;
 import com.bookmarks.entities.User;
+import com.bookmarks.util.JPAUtil;
 
-public class Main {
+public class UserDAO {
 
 	private static EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
 	private static EntityTransaction transaction = em.getTransaction();
 	private final static Logger logger = Logger.getLogger(UserDAO.class);
 
-	public static void test() {
+	public static void insert() {
+
 		if (!transaction.isActive()) {
 			transaction.begin();
 			logger.info("Transaction began");
@@ -56,12 +54,7 @@ public class Main {
 			transaction.commit();
 		} catch (Exception e) {
 			logger.info("Exception catched: ");
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
-	}
-
-	public static void main(String[] args) {
-		test();
-
 	}
 }
