@@ -3,16 +3,72 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	>
+	xmlns:ui="http://java.sun.com/jsf/facelets">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 <title>Bookmarks</title>
 </head>
 <body>
-	<h:form>
-		<h:commandButton style="padding-left: 20px" type="submit" value="Save"
-			action="#{userBean.save}" />
-	</h:form>
+	<h:body>
+
+		<h:panelGrid columns="4">
+			#{msg.language} 
+		<h:commandButton value="#{msg.changeEnglish}"
+				action="#{languageBean.change()}">
+				<f:param name="language" value="english" />
+			</h:commandButton>
+			<h:commandButton value="#{msg.changeDeutsch}"
+				action="#{languageBean.change()}">
+				<f:param name="language" value="deutsch" />
+			</h:commandButton>
+			<h:commandButton value="#{msg.changeRomanian}"
+				action="#{languageBean.change()}">
+				<f:param name="language" value="romanian" />
+			</h:commandButton>
+		</h:panelGrid>
+		<h:form id="userForm">
+			<div>
+				<h:outputLabel value="#{msg.name}" />
+				<div>
+					<h:inputText value="#{userBean.name}" />
+				</div>
+			</div>
+			<div>
+				<h:outputLabel value="#{msg.lastname}" />
+				<div>
+					<h:inputText value="#{userBean.lastname}" />
+				</div>
+			</div>
+			<div>
+				<h:outputLabel value="#{msg.email}" />
+				<div>
+					<h:inputText value="#{userBean.email}" />
+				</div>
+			</div>
+			<div>
+				<h:outputLabel value="#{msg.username}" />
+				<div>
+					<h:inputText value="#{userBean.username}" />
+				</div>
+			</div>
+			<div>
+				<h:outputLabel value="#{msg.password}" />
+				<div>
+					<h:inputText value="#{userBean.password}" />
+				</div>
+			</div>
+			<div>
+				<h:outputLabel value="#{msg.confirmPassword}" />
+				<div>
+					<h:inputText value="#{userBean.password}" />
+				</div>
+			</div>
+			<div>
+				<div>
+					<h:commandButton value="#{msg.register}" action="#{userBean.save}" />
+				</div>
+			</div>
+		</h:form>
+	</h:body>
 </body>
 </html>

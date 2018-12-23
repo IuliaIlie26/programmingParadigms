@@ -7,8 +7,8 @@
 		transaction-type="JTA">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 		<jta-data-source>jdbc/_BookmarksPool</jta-data-source>
-		<class>com.bookmarks.entities.Collection</class>
-		<class>com.bookmarks.entities.User</class>
+		<class>com.bookmarks.entities.Collections</class>
+		<class>com.bookmarks.entities.Users</class>
 		<class>com.bookmarks.entities.Bookmarks</class>
 		<properties>
 			<property name="hibernate.show_sql" value="true" />

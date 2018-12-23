@@ -4,60 +4,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
-
+import org.jinq.jpa.JinqJPAStreamProvider;
+import org.jinq.orm.stream.JinqStream;
 import com.bookmarks.dao.UserDAO;
-import com.bookmarks.entities.Bookmarks;
-import com.bookmarks.entities.Collection;
-import com.bookmarks.entities.User;
+import com.bookmarks.entities.Users;
 
 public class Main {
 
+	private static EntityManagerFactory emf = JPAUtil.getEntityManagerFactory();
 	private static EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
 	private static EntityTransaction transaction = em.getTransaction();
 	private final static Logger logger = Logger.getLogger(UserDAO.class);
+	private static JinqJPAStreamProvider streams;
+
+	private static JinqStream<Users> users() {
+		return streams.streamAll(em, Users.class);
+	}
 
 	public static void test() {
-		if (!transaction.isActive()) {
-			transaction.begin();
-			logger.info("Transaction began");
-		}
-		try {
-			User user = new User();
-			user.setUsername("ALOHA");
-			user.setPassword("test");
-			user.setEmailAddress("ALOHA address");
-			user.setLastname("last name");
-			user.setName("name1");
-			em.persist(user);
-			logger.info("User persisted");
 
-			Collection col = new Collection();
-			col.setName("My Bookmarks");
-			col.setUserid(user.getUserId());
+		streams = new JinqJPAStreamProvider(emf);
 
-			Bookmarks bk = new Bookmarks();
-			bk.setUserid(user.getUserId());
-			bk.setLink("link");
-			bk.setName("name");
-			bk.setVotes(0);
-			List<Collection> colList = new ArrayList<>();
-			colList.add(col);
-			bk.setCollection(colList);
+		users().forEach(c -> System.out.println(c.getName() + " " + c.getName() + " " + c.getLastname()));
 
-			ArrayList<Bookmarks> bkList = new ArrayList<>();
-			bkList.add(bk);
-			col.setBookmarks(bkList);
-			em.persist(bk);
-			logger.info("Bookmark & Collection persisted");
-			transaction.commit();
-		} catch (Exception e) {
-			logger.info("Exception catched: ");
-			//e.printStackTrace();
-		}
 	}
 
 	public static void main(String[] args) {

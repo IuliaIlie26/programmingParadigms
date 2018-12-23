@@ -16,6 +16,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.jinq</groupId>
+			<artifactId>jinq-jpa</artifactId>
+			<version>1.8.25</version>
+		</dependency>
+		<dependency>
 			<groupId>com.sun.faces</groupId>
 			<artifactId>jsf-api</artifactId>
 			<version>2.1.7</version>

@@ -1,6 +1,5 @@
 package com.bookmarks.entities;
 
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,16 +8,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.List;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "BOOKMARKS")
+@NamedQuery(name = "Bookmarks.findAll", query = "SELECT b FROM Bookmarks b")
 public class Bookmarks {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator= "seq_bookmarks_id")
-	@SequenceGenerator(name="seq_bookmarks_id", sequenceName = "seq_bookmarks_id", allocationSize=10)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_bookmarks_id")
+	@SequenceGenerator(name = "seq_bookmarks_id", sequenceName = "seq_bookmarks_id", allocationSize = 10)
 	@Column(name = "ID")
 	private Long id;
 
@@ -33,27 +34,27 @@ public class Bookmarks {
 
 	@Column(name = "VOTES")
 	private Integer votes;
-	
-	@ManyToMany(cascade=CascadeType.ALL,mappedBy="bookmarks")
-	private List<Collection> collection;
+
+	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "bookmarks")
+	private List<Collections> collection;
 
 	public Long getId() {
 		return id;
-	}
-
-	public Long getUserid() {
-		return userid;
 	}
 
 	public void setUserid(Long userid) {
 		this.userid = userid;
 	}
 
-	public List<Collection> getCollection() {
+	public Long getUserid() {
+		return userid;
+	}
+
+	public List<Collections> getCollection() {
 		return collection;
 	}
 
-	public void setCollection(List<Collection> collection) {
+	public void setCollection(List<Collections> collection) {
 		this.collection = collection;
 	}
 
