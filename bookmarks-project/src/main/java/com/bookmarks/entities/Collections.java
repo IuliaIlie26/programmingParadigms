@@ -17,8 +17,18 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "COLLECTIONS")
-@NamedQuery(name="Collections.findAll", query="SELECT c FROM Collections c")
+@NamedQuery(name = "Collections.findAll", query = "SELECT c FROM Collections c")
 public class Collections {
+
+	public Collections() {
+	}
+
+	public Collections(String name, Long userid, boolean shared) {
+		super();
+		this.name = name;
+		this.userid = userid;
+		this.shared = shared;
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_collections_id")
@@ -32,13 +42,23 @@ public class Collections {
 	@Column(name = "OWNER")
 	private Long userid;
 
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "COLLECTIONS_BOOKMARKS", joinColumns = {
-			@JoinColumn(name = "COLLECTIONID") }, inverseJoinColumns = { @JoinColumn(name = "BOOKMARKID") })
+	@Column(name = "SHARED")
+	private boolean shared;
+
+
+	@ManyToMany(cascade = CascadeType.MERGE, mappedBy = "collections")
 	private List<Bookmarks> bookmarks;
 
 	public Long getId() {
 		return id;
+	}
+
+	public boolean isShared() {
+		return shared;
+	}
+
+	public void setShared(boolean shared) {
+		this.shared = shared;
 	}
 
 	public String getName() {
@@ -63,6 +83,21 @@ public class Collections {
 
 	public void setBookmarks(List<Bookmarks> bookmarks) {
 		this.bookmarks = bookmarks;
+	}
+
+	@Override
+	public String toString() {
+		return "Collections [id=" + id + ", name=" + name + ", userid=" + userid + ", bookmarks=" + bookmarks + "]";
+	}
+
+	@Override
+	public boolean equals(Object arg0) {
+		return super.equals(arg0);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 
 }

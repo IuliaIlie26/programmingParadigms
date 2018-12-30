@@ -3,7 +3,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:b="http://bootsfaces.net/ui">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 <title>Bookmarks</title>
@@ -67,6 +70,20 @@
 				<div>
 					<h:commandButton value="#{msg.register}" action="#{userBean.save}" />
 				</div>
+			</div>
+		</h:form>
+		<h:form style="text-align:right">
+			<div >
+				<h:inputText id="username" value="#{loginBean.username}"
+					pt:placeholder="#{msg.username}" style="width:200px;">
+					<f:attribute name="password" value="#{password}" />
+					<f:validator validatorId="login" />
+				</h:inputText>
+				<h:inputSecret id="password" value="#{loginBean.password}"
+					pt:placeholder="#{msg.password}" binding="#{password}" />
+				<h:commandButton action="#{loginBean.login}"
+					value="#{msg.login}" />
+				<h:message for="username" style="color:red" />
 			</div>
 		</h:form>
 	</h:body>

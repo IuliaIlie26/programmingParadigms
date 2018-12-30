@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:b="http://bootsfaces.net/ui" xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>My Bookmarks</title>
+</head>
+<body>
+	<h:form id="bookmarks">
+		<div>
+			<h:outputLabel value="#{msg.bookmarksName}" />
+			<div>
+				<h:inputText value="#{bookmarksBean.name}" />
+			</div>
+		</div>
+		<div>
+			<h:outputLabel value="#{msg.link}" />
+			<div>
+				<h:inputText value="#{bookmarksBean.link}" />
+			</div>
+		</div>
+		<div>
+			<b:panelGrid columns="3">
+				<h:outputLabel value="#{msg.share}" />
+				<b:radiobutton value="#{bookmarksBean.shared}"
+					itemLabel="#{msg.yes}" itemValue="true" required="true" />
+				<b:radiobutton value="#{bookmarksBean.shared}" itemLabel="#{msg.no}"
+					itemValue="false" />
+			</b:panelGrid>
+		</div>
+		<div id="public" style="display: #{bookmarksBean.isPublic}">
+			<p>
+				<h:outputLabel value="#{msg.toCollection}:" />
+				<h:outputText id="selected_item"
+					value="#{bookmarksBean.selectedCollection.name}" />
+			</p>
+			<h:selectOneMenu value="#{bookmarksBean.selectedCollection}"
+				converter="omnifaces.SelectItemsConverter">
+				<f:selectItem itemValue="#{null}" itemLabel="#{msg.collectionsAll}"
+					noSelectionOption="true" />
+				<f:selectItems value="#{bookmarksBean.publicList}" var="col"
+					itemLabel="#{col.name}" itemValue="#{col}" />
+				<f:ajax render="selected_item" />
+			</h:selectOneMenu>
+		</div>
+		<div id="private" style="display: #{bookmarksBean.isPrivate}">
+			<h:outputLabel value="#{msg.toCollection}" />
+			<h:outputLabel value="#{msg.newCollection}" />
+			<div>
+				<h:inputText value="#{bookmarksBean.newCollection}" />
+			</div>
+			<div>
+				<h:commandButton value="#{msg.save}"
+					action="#{bookmarksBean.saveCollection}" />
+			</div>
+			<h:selectOneMenu value="#{bookmarksBean.selectedCollection}"
+				converter="omnifaces.SelectItemsConverter">
+				<f:selectItem itemLabel="#{msg.collectionsAll}"
+					noSelectionOption="true" />
+				<f:selectItems value="#{bookmarksBean.privateList}" var="col"
+					itemLabel="#{col.name}" itemValue="#{col}" />
+				<f:ajax render="selected_item" />
+			</h:selectOneMenu>
+
+		</div>
+		<div>
+			<h:commandButton value="#{msg.save}" action="#{bookmarksBean.add}" />
+		</div>
+		<div>
+			<h:commandButton value="#{msg.share}" action="#{bookmarksBean.share}" />
+		</div>
+	</h:form>
+</body>
+</html>

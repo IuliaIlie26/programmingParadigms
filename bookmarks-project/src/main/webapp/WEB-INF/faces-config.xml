@@ -5,8 +5,10 @@
 	version="2.2">
 	<navigation-rule>
 		<from-view-id>/index.xhtml</from-view-id>
-		<!-- NAVIGATION rules for routing example: <navigation-case> <from-outcome>index</from-outcome> 
-			<to-view-id>/index.xhtml</to-view-id> </navigation-case> -->
+		<navigation-case>
+			<from-outcome>mainpage</from-outcome>
+			<to-view-id>/mainpage.xhtml</to-view-id>
+		</navigation-case>
 	</navigation-rule>
 	<application>
 		<locale-config>

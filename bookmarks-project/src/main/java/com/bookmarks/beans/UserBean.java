@@ -21,7 +21,7 @@ public class UserBean implements Serializable {
 	private String lastname;
 	private String name;
 	private String confirmPassword;
-	
+
 	public String getUsername() {
 		return username;
 	}
@@ -74,6 +74,7 @@ public class UserBean implements Serializable {
 
 		logger.info("Saving user: " + username);
 		dao.insert(name, lastname, email, username, password);
-		return "index";
+		return "mainpage";
 	}
+
 }

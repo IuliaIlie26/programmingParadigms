@@ -12,13 +12,17 @@ import com.bookmarks.util.JPAUtil;
 
 public class UserDAO {
 
-	private static EntityManager em;
-	private static EntityTransaction transaction;
 	private static EntityManagerFactory emf = JPAUtil.getEntityManagerFactory();
+	private static EntityManager em = emf.createEntityManager();
+	private static EntityTransaction transaction;
 	private static JinqJPAStreamProvider streams = new JinqJPAStreamProvider(emf);
 	private final static Logger logger = Logger.getLogger(UserDAO.class);
 
-	private JinqStream<Users> users() {
+	private static JinqStream<Users> users() {
+
+		if (!em.isOpen()) {
+			em = emf.createEntityManager();
+		}
 		return streams.streamAll(em, Users.class);
 	}
 
@@ -31,10 +35,14 @@ public class UserDAO {
 	public void insert(String name, String lastname, String email, String username, String password) {
 
 		try {
+			if (!em.isOpen()) {
 
-			em = emf.createEntityManager();
+				em = emf.createEntityManager();
+			}
+
 			transaction = em.getTransaction();
 			transaction.begin();
+
 			Users user = new Users();
 			user.setUsername(username);
 			user.setPassword(password);
@@ -58,6 +66,23 @@ public class UserDAO {
 			}
 		}
 
+	}
+
+	public static boolean validate(String username, String password) {
+		return !users().where(u -> (u.getUsername().equals(username) || u.getEmailAddress().equals(username))
+				&& u.getPassword().equals(password)).toList().isEmpty();
+	}
+
+	public static long getUserIdByUsername(String username) {
+		return users().where(u -> u.getUsername().equals(username) || u.getEmailAddress().equals(username)).findFirst()
+				.get().getUserId();
+	}
+
+	public static boolean usernameOrEmailExists(String name, String value) {
+		if (name.equals("email"))
+			return !users().where(u -> u.getEmailAddress().equals(value)).toList().isEmpty();
+		else
+			return !users().where(u -> u.getUsername().equals(value)).toList().isEmpty();
 	}
 
 }

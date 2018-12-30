@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+
 import java.util.List;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
@@ -35,8 +38,10 @@ public class Bookmarks {
 	@Column(name = "VOTES")
 	private Integer votes;
 
-	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "bookmarks")
-	private List<Collections> collection;
+	@ManyToMany(cascade = CascadeType.MERGE)
+	@JoinTable(name = "COLLECTIONS_BOOKMARKS", joinColumns = {
+			@JoinColumn(name = "BOOKMARKID") }, inverseJoinColumns = { @JoinColumn(name = "COLLECTIONID") })
+	private List<Collections> collections;
 
 	public Long getId() {
 		return id;
@@ -51,11 +56,11 @@ public class Bookmarks {
 	}
 
 	public List<Collections> getCollection() {
-		return collection;
+		return collections;
 	}
 
-	public void setCollection(List<Collections> collection) {
-		this.collection = collection;
+	public void setCollection(List<Collections> collections) {
+		this.collections = collections;
 	}
 
 	public String getName() {
