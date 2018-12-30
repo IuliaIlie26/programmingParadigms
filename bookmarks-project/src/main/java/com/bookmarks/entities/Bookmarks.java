@@ -35,9 +35,6 @@ public class Bookmarks {
 	@Column(name = "USERID")
 	private Long userid;
 
-	@Column(name = "VOTES")
-	private Integer votes;
-
 	@ManyToMany(cascade = CascadeType.MERGE)
 	@JoinTable(name = "COLLECTIONS_BOOKMARKS", joinColumns = {
 			@JoinColumn(name = "BOOKMARKID") }, inverseJoinColumns = { @JoinColumn(name = "COLLECTIONID") })
@@ -77,13 +74,5 @@ public class Bookmarks {
 
 	public void setLink(String link) {
 		this.link = link;
-	}
-
-	public Integer getVotes() {
-		return votes;
-	}
-
-	public void setVotes(Integer votes) {
-		this.votes = votes;
 	}
 }

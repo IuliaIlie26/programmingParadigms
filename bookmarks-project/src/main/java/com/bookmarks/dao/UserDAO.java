@@ -55,13 +55,13 @@ public class UserDAO {
 
 		} catch (Exception e) {
 			transaction.rollback();
-			logger.info("User cannot be saved. Cause: ");
+			logger.error("User cannot be saved. Cause: ");
 			e.printStackTrace();
 		} finally {
 			try {
 				em.close();
 			} catch (Exception e) {
-				logger.info("Exception caught. Cannot close EntityManager.");
+				logger.error("Exception caught. Cannot close EntityManager.");
 				e.printStackTrace();
 			}
 		}
@@ -83,6 +83,38 @@ public class UserDAO {
 			return !users().where(u -> u.getEmailAddress().equals(value)).toList().isEmpty();
 		else
 			return !users().where(u -> u.getUsername().equals(value)).toList().isEmpty();
+	}
+
+	public void changePassword(String username, String password) {
+
+		Users user = users().where(u ->u.getUsername().equals(username)).getOnlyValue();
+		try {
+			if (!em.isOpen()) {
+
+				em = emf.createEntityManager();
+			}
+
+			transaction = em.getTransaction();
+			transaction.begin();
+
+			user.setPassword(password);
+			
+			transaction.commit();
+			logger.info("Password changed!");
+
+		} catch (Exception e) {
+			transaction.rollback();
+			logger.error("Password cannot be changed. Cause: ");
+			e.printStackTrace();
+		} finally {
+			try {
+				em.close();
+			} catch (Exception e) {
+				logger.error("Exception caught. Cannot close EntityManager.");
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 }

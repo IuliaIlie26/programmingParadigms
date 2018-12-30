@@ -37,8 +37,15 @@ public class LoginBean implements Serializable {
 	public String login() {
 		HttpSession session = SessionUtils.getSession();
 		session.setAttribute("username", username);
-		logger.debug("User "+username+" logged in.");
+		logger.debug("User " + username + " logged in.");
 		return "mainpage";
 	}
 
+	public String logout() {
+
+		HttpSession session = SessionUtils.getSession();
+		session.invalidate();
+		logger.debug("User logged out.");
+		return "index";
+	}
 }

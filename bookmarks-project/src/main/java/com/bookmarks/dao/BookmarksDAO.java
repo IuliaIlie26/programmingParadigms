@@ -1,10 +1,7 @@
 package com.bookmarks.dao;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -15,7 +12,6 @@ import org.jinq.orm.stream.JinqStream;
 
 import com.bookmarks.entities.Bookmarks;
 import com.bookmarks.entities.Collections;
-import com.bookmarks.entities.Users;
 import com.bookmarks.util.JPAUtil;
 
 public class BookmarksDAO {
@@ -33,7 +29,13 @@ public class BookmarksDAO {
 		}
 		return streams.streamAll(em, Bookmarks.class);
 	}
-	
+
+	public List<Bookmarks> search(CharSequence criteria) {
+
+		return bookmarks().where(b -> b.getName().contains(criteria)).toList();
+
+	}
+
 	public static void insert(Long user, String link, String name, Collections col) {
 		try {
 
@@ -48,7 +50,6 @@ public class BookmarksDAO {
 			bk.setUserid(user);
 			bk.setLink(link);
 			bk.setName(name);
-			bk.setVotes(0);
 			List<Collections> colList = new ArrayList<>();
 			colList.add(col);
 			bk.setCollection(colList);
@@ -61,14 +62,19 @@ public class BookmarksDAO {
 
 		} catch (Exception e) {
 			transaction.rollback();
-			logger.info("Could not save the bookmark: ");
+			logger.error("Could not save the bookmark: ");
 			e.printStackTrace();
 		} finally {
-			em.close();
+			try {
+				em.close();
+			} catch (Exception e) {
+				logger.error("Exception caught. Cannot close EntityManager.");
+				e.printStackTrace();
+			}
 		}
 	}
 
-	public void vote(Bookmarks bookmark) {
+	public void rename(Bookmarks bk, String name) {
 		try {
 			if (!em.isOpen()) {
 				em = emf.createEntityManager();
@@ -76,14 +82,23 @@ public class BookmarksDAO {
 
 			transaction = em.getTransaction();
 			transaction.begin();
-			bookmark.setVotes(bookmark.getVotes()+1);
+
+			bk.setName(name);
 			transaction.commit();
+			logger.info("Bookmark renamed!");
+
 		} catch (Exception e) {
 			transaction.rollback();
-			logger.info("Could not save the bookmark: ");
+			logger.error("Bookmark cannot be renamed. Cause: ");
 			e.printStackTrace();
 		} finally {
-			em.close();
+			try {
+				em.close();
+			} catch (Exception e) {
+				logger.error("Exception caught. Cannot close EntityManager.");
+				e.printStackTrace();
+			}
 		}
+
 	}
 }

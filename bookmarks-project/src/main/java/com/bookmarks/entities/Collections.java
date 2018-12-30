@@ -44,6 +44,9 @@ public class Collections {
 
 	@Column(name = "SHARED")
 	private boolean shared;
+	
+	@Column(name = "VOTES")
+	private Integer votes;
 
 
 	@ManyToMany(cascade = CascadeType.MERGE, mappedBy = "collections")
@@ -83,6 +86,14 @@ public class Collections {
 
 	public void setBookmarks(List<Bookmarks> bookmarks) {
 		this.bookmarks = bookmarks;
+	}
+	
+	public Integer getVotes() {
+		return votes;
+	}
+
+	public void setVotes(Integer votes) {
+		this.votes = votes;
 	}
 
 	@Override

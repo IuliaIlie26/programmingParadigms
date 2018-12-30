@@ -35,6 +35,12 @@ public class CollectionsDAO {
 		return streams.streamAll(em, Collections.class);
 	}
 
+	public List<Collections> search(CharSequence criteria) {
+
+		return collections().where(c -> c.getName().contains(criteria)).toList();
+
+	}
+
 	public static List<Collections> getPrivate(Long user) {
 
 		List<Collections> list = collections().where(c -> c.getUserid() == user).toList();
@@ -50,7 +56,7 @@ public class CollectionsDAO {
 	}
 
 	public static Collection<Collections> getPublic() {
-		List<Collections> list = collections().where(c -> c.getUserid() == 0 && c.isShared() == true).toList();
+		List<Collections> list = collections().where(c -> c.getUserid() == 0).toList();
 
 		java.util.Collections.sort(list, new Comparator<Collections>() {
 
@@ -78,19 +84,20 @@ public class CollectionsDAO {
 			collection.setShared(shared);
 			collection.setUserid(owner);
 			collection.setBookmarks(new ArrayList<Bookmarks>());
+			collection.setVotes(0);
 			em.persist(collection);
 			transaction.commit();
 			logger.info("Collection saved!");
 
 		} catch (Exception e) {
 			transaction.rollback();
-			logger.info("Collection cannot be saved. Cause: ");
+			logger.error("Collection cannot be saved. Cause: ");
 			e.printStackTrace();
 		} finally {
 			try {
 				em.close();
 			} catch (Exception e) {
-				logger.info("Exception caught. Cannot close EntityManager.");
+				logger.error("Exception caught. Cannot close EntityManager.");
 				e.printStackTrace();
 			}
 		}
@@ -103,6 +110,84 @@ public class CollectionsDAO {
 		collections().where(c -> c.getUserid() == userid).forEach(c -> map.put(c, c.getBookmarks()));
 
 		return map;
+	}
+
+	public void vote(Collections collection) {
+		try {
+			if (!em.isOpen()) {
+				em = emf.createEntityManager();
+			}
+
+			transaction = em.getTransaction();
+			transaction.begin();
+			collection.setVotes(collection.getVotes() + 1);
+			transaction.commit();
+		} catch (Exception e) {
+			transaction.rollback();
+			logger.error("Voting not posible: could not update the bookmark: ");
+			e.printStackTrace();
+		} finally {
+			try {
+				em.close();
+			} catch (Exception e) {
+				logger.error("Exception caught. Cannot close EntityManager.");
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void rename(Collections c, String name) {
+		try {
+			if (!em.isOpen()) {
+				em = emf.createEntityManager();
+			}
+
+			transaction = em.getTransaction();
+			transaction.begin();
+
+			c.setName(name);
+			transaction.commit();
+			logger.info("Collection renamed!");
+
+		} catch (Exception e) {
+			transaction.rollback();
+			logger.error("Collection cannot be renamed. Cause: ");
+			e.printStackTrace();
+		} finally {
+			try {
+				em.close();
+			} catch (Exception e) {
+				logger.error("Exception caught. Cannot close EntityManager.");
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	public void share(Collections collection) {
+		try {
+			if (!em.isOpen()) {
+				em = emf.createEntityManager();
+			}
+
+			transaction = em.getTransaction();
+			transaction.begin();
+			collection.setShared(true);
+			transaction.commit();
+			logger.info("Collection shared  " + collection.getName());
+
+		} catch (Exception e) {
+			transaction.rollback();
+			logger.error("Collection cannot be shared. Cause: ");
+			e.printStackTrace();
+		} finally {
+			try {
+				em.close();
+			} catch (Exception e) {
+				logger.error("Exception caught. Cannot close EntityManager.");
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
