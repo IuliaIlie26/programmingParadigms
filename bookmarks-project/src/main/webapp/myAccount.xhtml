@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:b="http://bootsfaces.net/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>My Account</title>
+</h:head>
+<h:body>
+	<div id="header">
+		<ui:insert name="header">
+			<ui:include src="header.xhtml" />
+		</ui:insert>
+	</div>
+	<b:form style="padding-top:10px; padding-left: 20px">
+		<b:tabView tabPosition="left"
+			contentStyle="border: 1px solid #ddd;padding:10px" immediate="true">
+			<b:tab title="#{msg.editDetails}" look="info">
+				<div style="width: 100%; padding-bottom: 20px;">
+					<h:outputLabel style="width:10%;" id="name" value="#{msg.name}:" />
+					<h:inputText style="width:15%;" id="inputName"
+						value="#{userBean.name}">
+					</h:inputText>
+				</div>
+				<div style="width: 100%; padding-bottom: 20px;">
+					<h:outputLabel style="width:10%;" id="lname"
+						value="#{msg.lastname}:" />
+					<h:inputText style="width:15%;" id="inputLastName"
+						value="#{userBean.lastname}">
+					</h:inputText>
+				</div>
+				<div style="width: 100%; padding-bottom: 20px;">
+					<h:outputLabel style="width:10%;" id="email" value="#{msg.email}:" />
+					<h:inputText style="width:15%;" id="inputEmail"
+						value="#{userBean.email}">
+
+					</h:inputText>
+					<h:message for="inputEmail" style="color:red" />
+				</div>
+				<b:commandButton value="#{msg.saveChanges}"
+					action="#{userBean.saveChanges}" iconAwesome="fa-pencil">
+				</b:commandButton>
+			</b:tab>
+			<b:tab title="#{msg.changePassword}" look="info" immediate="true">
+				<div style="width: 100%; padding-bottom: 20px;">
+					<h:outputLabel style="width:10%;" id="passwordOld"
+						value="#{msg.oldPassword}" />
+					<h:inputSecret style="width:15%;" id="passwordInputOld"
+						value="#{userBean.oldPassword}" />
+
+				</div>
+				<div style="width: 100%; padding-bottom: 20px;">
+					<h:outputLabel style="width:10%;" id="password"
+						value="#{msg.newPassword}" />
+					<h:inputSecret style="width:15%;" id="passwordInput"
+						value="#{userBean.password}">
+					</h:inputSecret>
+				</div>
+				<div style="width: 100%; padding-bottom: 20px;">
+					<h:outputLabel style="width:10%;" id="passw"
+						value="#{msg.confirmPassword}" />
+					<h:inputSecret style="width:15%;" id="confirmationPassword"
+						value="#{userBean.confirmPassword}"></h:inputSecret>
+				</div>
+				<b:commandButton value="
+						#{msg.saveChanges}"
+					action="#{userBean.changePassword}" iconAwesome="fa-pencil" />
+			</b:tab>
+		</b:tabView>
+	</b:form>
+</h:body>
+</html>

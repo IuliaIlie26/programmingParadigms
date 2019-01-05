@@ -8,6 +8,7 @@ import org.jinq.jpa.JinqJPAStreamProvider;
 import org.jinq.orm.stream.JinqStream;
 
 import com.bookmarks.entities.Users;
+import com.bookmarks.util.AESEncryptionUtil;
 import com.bookmarks.util.JPAUtil;
 
 public class UserDAO {
@@ -42,7 +43,7 @@ public class UserDAO {
 
 			transaction = em.getTransaction();
 			transaction.begin();
-
+			password = AESEncryptionUtil.encrypt(password);
 			Users user = new Users();
 			user.setUsername(username);
 			user.setPassword(password);
@@ -87,7 +88,7 @@ public class UserDAO {
 
 	public void changePassword(String username, String password) {
 
-		Users user = users().where(u ->u.getUsername().equals(username)).getOnlyValue();
+		Users user = users().where(u -> u.getUsername().equals(username)).getOnlyValue();
 		try {
 			if (!em.isOpen()) {
 
@@ -98,7 +99,7 @@ public class UserDAO {
 			transaction.begin();
 
 			user.setPassword(password);
-			
+
 			transaction.commit();
 			logger.info("Password changed!");
 
@@ -115,6 +116,46 @@ public class UserDAO {
 			}
 		}
 
+	}
+
+	public static String getLastname(String username) {
+		return users().where(u -> u.getUsername().equals(username)).findFirst().get().getLastname();
+	}
+
+	public void update(String username, String name, String lastname, String email) {
+
+		Users user = users().where(u -> u.getUsername().equals(username)).getOnlyValue();
+		try {
+			if (!em.isOpen()) {
+
+				em = emf.createEntityManager();
+			}
+
+			transaction = em.getTransaction();
+			transaction.begin();
+
+			if (name != null)
+				user.setName(name);
+			if (lastname != null)
+				user.setLastname(lastname);
+			if (email != null)
+				user.setEmailAddress(email);
+
+			transaction.commit();
+			logger.info("User data persisted!");
+
+		} catch (Exception e) {
+			transaction.rollback();
+			logger.error("User data cannot be changed. Cause: ");
+			e.printStackTrace();
+		} finally {
+			try {
+				em.close();
+			} catch (Exception e) {
+				logger.error("Exception caught. Cannot close EntityManager.");
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

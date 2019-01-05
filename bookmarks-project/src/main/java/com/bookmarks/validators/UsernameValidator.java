@@ -1,4 +1,4 @@
-package com.unitbv.mi.validators;
+package com.bookmarks.validators;
 
 import java.util.ResourceBundle;
 
@@ -8,9 +8,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
-
 import com.bookmarks.dao.UserDAO;
-import com.unitbv.mi.dao.UsersDAO;
 
 @FacesValidator("username")
 public class UsernameValidator implements Validator {
@@ -25,13 +23,13 @@ public class UsernameValidator implements Validator {
 			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 			throw new ValidatorException(msg);
 		}
-			if (UserDAO.usernameOrEmailExists(username, "username") == true) {
-				final ResourceBundle bundle = ResourceBundle.getBundle("ApplicationResources_en");
+		if (UserDAO.usernameOrEmailExists(username, "username") == true) {
+			final ResourceBundle bundle = ResourceBundle.getBundle("ApplicationResources_en");
 
-				final FacesMessage msg = new FacesMessage(bundle.getString("userTaken"));
-				msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-				throw new ValidatorException(msg);
-			}
+			final FacesMessage msg = new FacesMessage(bundle.getString("userTaken"));
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			throw new ValidatorException(msg);
+		}
 
 	}
 

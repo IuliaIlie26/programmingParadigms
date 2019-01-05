@@ -36,6 +36,31 @@ public class BookmarksDAO {
 
 	}
 
+	public static void delete(Bookmarks bk) {
+		try {
+			if (!em.isOpen()) {
+				em = emf.createEntityManager();
+			}
+			transaction = em.getTransaction();
+			transaction.begin();
+			em.remove(bk);
+			transaction.commit();
+			logger.info("Bookmark " + bk.getName() + " was deleted!");
+
+		} catch (Exception e) {
+			transaction.rollback();
+			logger.error("Could not save the bookmark: ");
+			e.printStackTrace();
+		} finally {
+			try {
+				em.close();
+			} catch (Exception e) {
+				logger.error("Exception caught. Cannot close EntityManager.");
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public static void insert(Long user, String link, String name, Collections col) {
 		try {
 
@@ -99,6 +124,39 @@ public class BookmarksDAO {
 				e.printStackTrace();
 			}
 		}
+	}
 
+	public static void addBookmarkToPrivate(Long user, Bookmarks bk, Collections col) {
+		try {
+
+			if (!em.isOpen()) {
+				em = emf.createEntityManager();
+			}
+
+			transaction = em.getTransaction();
+			transaction.begin();
+			List<Collections> colList = new ArrayList<>();
+			colList.add(col);
+			bk.setUserid(user);
+			bk.setCollection(colList);
+			ArrayList<Bookmarks> bkList = new ArrayList<>();
+			bkList.add(bk);
+			col.setBookmarks(bkList);
+			em.persist(bk);
+			transaction.commit();
+			logger.info("Bookmark " + bk.getName() + " was saved in collection " + col.getName());
+
+		} catch (Exception e) {
+			transaction.rollback();
+			logger.error("Could not save the bookmark: ");
+			e.printStackTrace();
+		} finally {
+			try {
+				em.close();
+			} catch (Exception e) {
+				logger.error("Exception caught. Cannot close EntityManager.");
+				e.printStackTrace();
+			}
+		}
 	}
 }

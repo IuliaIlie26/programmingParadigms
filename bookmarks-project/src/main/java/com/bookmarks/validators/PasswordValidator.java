@@ -1,4 +1,4 @@
-package com.unitbv.mi.validators;
+package com.bookmarks.validators;
 
 import java.util.ResourceBundle;
 import javax.faces.application.FacesMessage;

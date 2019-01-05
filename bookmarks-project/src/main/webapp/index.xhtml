@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -7,85 +9,32 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:b="http://bootsfaces.net/ui">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-<title>Bookmarks</title>
-</head>
-<body>
-	<h:body>
+<h:head>
+	<title>Bookmarks System</title>
+</h:head>
+<h:body>
 
-		<h:panelGrid columns="4">
-			#{msg.language} 
-		<h:commandButton value="#{msg.changeEnglish}"
-				action="#{languageBean.change()}">
-				<f:param name="language" value="english" />
-			</h:commandButton>
-			<h:commandButton value="#{msg.changeDeutsch}"
-				action="#{languageBean.change()}">
-				<f:param name="language" value="deutsch" />
-			</h:commandButton>
-			<h:commandButton value="#{msg.changeRomanian}"
-				action="#{languageBean.change()}">
-				<f:param name="language" value="romanian" />
-			</h:commandButton>
-		</h:panelGrid>
-		<h:form id="userForm">
-			<div>
-				<h:outputLabel value="#{msg.name}" />
-				<div>
-					<h:inputText value="#{userBean.name}" />
-				</div>
-			</div>
-			<div>
-				<h:outputLabel value="#{msg.lastname}" />
-				<div>
-					<h:inputText value="#{userBean.lastname}" />
-				</div>
-			</div>
-			<div>
-				<h:outputLabel value="#{msg.email}" />
-				<div>
-					<h:inputText value="#{userBean.email}" />
-				</div>
-			</div>
-			<div>
-				<h:outputLabel value="#{msg.username}" />
-				<div>
-					<h:inputText value="#{userBean.username}" />
-				</div>
-			</div>
-			<div>
-				<h:outputLabel value="#{msg.password}" />
-				<div>
-					<h:inputText value="#{userBean.password}" />
-				</div>
-			</div>
-			<div>
-				<h:outputLabel value="#{msg.confirmPassword}" />
-				<div>
-					<h:inputText value="#{userBean.password}" />
-				</div>
-			</div>
-			<div>
-				<div>
-					<h:commandButton value="#{msg.register}" action="#{userBean.save}" />
-				</div>
-			</div>
-		</h:form>
-		<h:form style="text-align:right">
-			<div >
-				<h:inputText id="username" value="#{loginBean.username}"
-					pt:placeholder="#{msg.username}" style="width:200px;">
-					<f:attribute name="password" value="#{password}" />
-					<f:validator validatorId="login" />
-				</h:inputText>
-				<h:inputSecret id="password" value="#{loginBean.password}"
-					pt:placeholder="#{msg.password}" binding="#{password}" />
-				<h:commandButton action="#{loginBean.login}"
-					value="#{msg.login}" />
-				<h:message for="username" style="color:red" />
-			</div>
-		</h:form>
-	</h:body>
-</body>
+	<div id="header">
+		<ui:insert name="header">
+			<ui:include src="header.xhtml" />
+		</ui:insert>
+	</div>
+	<h:form>
+		<div style="padding-top: 10px; padding-left: 20px">
+			<h:inputText value="#{searchBean.bookmarks}"
+				pt:placeholder="#{msg.bookmarks}">
+			</h:inputText>
+
+			<h:selectOneMenu style="padding-bottom: 2px;padding-top: 4px"
+				id="theme" value="#{searchBean.selectedCollection}">
+				<f:selectItem itemLabel="#{msg.publicThemes}" itemValue=""
+					itemDisabled="true" />
+				<f:selectItems value="#{searchBean.publicList}" itemValue="" />
+			</h:selectOneMenu>
+
+			<b:commandButton value="#{msg.search}" type="submit"
+				action="#{searchBean.search}" />
+		</div>
+	</h:form>
+</h:body>
 </html>

@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -55,17 +56,10 @@ public class CollectionsDAO {
 		return list;
 	}
 
-	public static Collection<Collections> getPublic() {
-		List<Collections> list = collections().where(c -> c.getUserid() == 0).toList();
-
-		java.util.Collections.sort(list, new Comparator<Collections>() {
-
-			@Override
-			public int compare(Collections o1, Collections o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-		});
-
+	public static Collection<String> getPublic() {
+		List<String> list = collections().where(c -> c.getUserid() == 0).map(Collections::getName)
+				.collect(Collectors.toList());
+		java.util.Collections.sort(list);
 		return list;
 	}
 
@@ -92,6 +86,34 @@ public class CollectionsDAO {
 		} catch (Exception e) {
 			transaction.rollback();
 			logger.error("Collection cannot be saved. Cause: ");
+			e.printStackTrace();
+		} finally {
+			try {
+				em.close();
+			} catch (Exception e) {
+				logger.error("Exception caught. Cannot close EntityManager.");
+				e.printStackTrace();
+			}
+		}
+
+	}
+	
+	public static void delete(Collections col) {
+
+		try {
+			if (!em.isOpen()) {
+				em = emf.createEntityManager();
+			}
+
+			transaction = em.getTransaction();
+			transaction.begin();
+			em.remove(col);
+			transaction.commit();
+			logger.info("Collection deleted!");
+
+		} catch (Exception e) {
+			transaction.rollback();
+			logger.error("Collection cannot be deleted. Cause: ");
 			e.printStackTrace();
 		} finally {
 			try {

@@ -1,11 +1,18 @@
 package com.bookmarks.beans;
 
 import java.io.Serializable;
+import java.util.ResourceBundle;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 import org.apache.log4j.Logger;
 import com.bookmarks.dao.UserDAO;
+import com.bookmarks.util.AESEncryptionUtil;
 
 @ManagedBean(name = "userBean")
 @SessionScoped
@@ -21,6 +28,15 @@ public class UserBean implements Serializable {
 	private String lastname;
 	private String name;
 	private String confirmPassword;
+	private String oldPassword;
+
+	public String getOldPassword() {
+		return oldPassword;
+	}
+
+	public void setOldPassword(String oldPassword) {
+		this.oldPassword = oldPassword;
+	}
 
 	public String getUsername() {
 		return username;
@@ -70,11 +86,48 @@ public class UserBean implements Serializable {
 		this.confirmPassword = confirmPassword;
 	}
 
-	public String save() {
+	public String register() {
 
 		logger.info("Saving user: " + username);
 		dao.insert(name, lastname, email, username, password);
 		return "mainpage";
 	}
 
+	public void saveChanges() {
+		String username = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("username");
+		if (email != null || email != "")
+			try {
+				InternetAddress emailAddr = new InternetAddress(email);
+				emailAddr.validate();
+
+			} catch (AddressException ex) {
+				logger.error("Email Address is wrong.");
+			}
+		dao.update(username, name, lastname, email);
+		logger.info("User data updated.");
+
+	}
+
+	public void changePassword() {
+		String username = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("username");
+		if (password.matches("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$")) {
+			if (UserDAO.validate(username, AESEncryptionUtil.encrypt(oldPassword))) {
+				dao.changePassword(username, password);
+				logger.info("Password changed.");
+			} else {
+				logger.error("Old password validation failed.");
+				final ResourceBundle bundle = ResourceBundle.getBundle("ApplicationResources_en");
+				final FacesMessage msg = new FacesMessage(bundle.getString("failed"));
+				msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+			}
+		} else {
+			logger.error("Password policy not met.");
+			final ResourceBundle bundle = ResourceBundle.getBundle("ApplicationResources_en");
+			final FacesMessage msg = new FacesMessage(bundle.getString("passwordPolicy"));
+			msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+		}
+
+	}
 }

@@ -12,7 +12,6 @@ import com.bookmarks.dao.BookmarksDAO;
 import com.bookmarks.dao.UserDAO;
 import com.bookmarks.entities.Collections;
 import com.bookmarks.entities.Users;
-import com.sun.tools.xjc.model.SymbolSpace;
 
 public class Main {
 

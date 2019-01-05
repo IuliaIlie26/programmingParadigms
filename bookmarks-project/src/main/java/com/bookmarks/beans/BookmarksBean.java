@@ -28,7 +28,7 @@ public class BookmarksBean implements Serializable {
 	private String isPublic;
 	private String isPrivate;
 	private List<Collections> privateList;
-	private List<Collections> publicList;
+	private List<String> publicList;
 	private Collections selectedCollection;
 	private String username;
 	private Long userid;
@@ -70,11 +70,11 @@ public class BookmarksBean implements Serializable {
 		this.privateList = privateList;
 	}
 
-	public List<Collections> getPublicList() {
+	public List<String> getPublicList() {
 		return publicList;
 	}
 
-	public void setPublicList(List<Collections> publicList) {
+	public void setPublicList(List<String> publicList) {
 		this.publicList = publicList;
 	}
 
